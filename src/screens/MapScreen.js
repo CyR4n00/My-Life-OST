@@ -45,9 +45,22 @@ export default function MapScreen() {
   const [selectedIcon, setSelectedIcon] = useState(AVAILABLE_ICONS[0]);
   const [dropMessage, setDropMessage] = useState('');
 
+  // ドロップ回数の管理（初期値3）
+  const [dropsLeft, setDropsLeft] = useState(3);
+  const MAX_DROPS = 3;
+
+  const handleOpenDropModal = () => {
+    if (dropsLeft > 0) {
+      setDropModalVisible(true);
+    } else {
+      alert("今日のドロップ回数を使い切りました。明日まで待つか、プレミアム機能で回復してください！");
+    }
+  };
+
   const handleDrop = () => {
     // 実際はここでAPI等に送信し、新しいドロップを地図上に追加する処理を書く
     console.log("Dropped:", { icon: selectedIcon, message: dropMessage });
+    setDropsLeft(prev => Math.max(0, prev - 1));
     setDropModalVisible(false);
     setDropMessage('');
   };
@@ -114,7 +127,7 @@ export default function MapScreen() {
       )}
 
       {/* ガラケー風ステータスバー（ワンポイント） */}
-      <SafeAreaView style={styles.statusBarContainer} pointerEvents="none">
+      <SafeAreaView style={styles.statusBarContainer} pointerEvents="box-none">
         <View style={styles.statusBar}>
           <Text style={[globalStyles.textPixel, { fontSize: 12, color: colors.magenta }]}>i-mode</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -122,37 +135,47 @@ export default function MapScreen() {
             <MaterialCommunityIcons name="battery-80" size={14} color={colors.cyan} style={{ marginLeft: 4 }} />
           </View>
         </View>
+
+        {/* 右上のドロップ残数表示 */}
+        <View style={styles.dropCounterContainer}>
+          <BlurView intensity={80} tint="light" style={[styles.dropCounter, globalStyles.glassmorphism]}>
+            <MaterialCommunityIcons name="pill" size={16} color={colors.magenta} />
+            <Text style={[globalStyles.textPixel, styles.dropCounterText]}>
+              DROPS: {dropsLeft}/{MAX_DROPS}
+            </Text>
+          </BlurView>
+        </View>
       </SafeAreaView>
 
       {/* ボトムナビゲーション（要件定義に基づくアイコン） */}
       <SafeAreaView style={styles.bottomContainer} pointerEvents="box-none" edges={['bottom']}>
         <View style={styles.bottomNavContainer}>
           {/* マップ (アクティブ状態) */}
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => console.log('Map tapped')}>
             <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism]}>
               <MaterialCommunityIcons name="map-outline" size={28} color={colors.magenta} />
             </BlurView>
           </TouchableOpacity>
           {/* コレクション/アルバム */}
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => alert('機能開発中: 拾ったドロップのアルバム画面が開きます')}>
             <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism]}>
               <MaterialCommunityIcons name="folder-heart-outline" size={28} color={colors.primary} />
             </BlurView>
           </TouchableOpacity>
           {/* ドロップ追加（中央で少し強調） */}
-          <TouchableOpacity onPress={() => setDropModalVisible(true)}>
+          <TouchableOpacity onPress={handleOpenDropModal}>
             <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism, { borderColor: colors.cyan, borderWidth: 2 }]}>
               <MaterialCommunityIcons name="plus-thick" size={32} color={colors.cyan} />
             </BlurView>
           </TouchableOpacity>
           {/* フレンド */}
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => alert('機能開発中: フレンドリストと限定ドロップの機能画面が開きます')}>
             <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism]}>
               <MaterialCommunityIcons name="account-multiple-outline" size={28} color={colors.primary} />
             </BlurView>
           </TouchableOpacity>
           {/* アバター/プロフィール/ガチャ */}
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => alert('機能開発中: アバター着せ替え・プロフィール画面が開きます')}>
             <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism]}>
               <MaterialCommunityIcons name="account-circle-outline" size={28} color={colors.primary} />
             </BlurView>
@@ -249,6 +272,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     opacity: 0.8,
+  },
+  dropCounterContainer: {
+    alignItems: 'flex-end',
+    marginTop: 10,
+  },
+  dropCounter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
+  dropCounterText: {
+    fontSize: 12,
+    color: colors.primary,
+    marginLeft: 6,
+    fontWeight: 'bold',
   },
   bottomContainer: {
     position: 'absolute',
