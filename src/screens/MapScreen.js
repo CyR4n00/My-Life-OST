@@ -133,32 +133,37 @@ export default function MapScreen() {
         </BlurView>
       </SafeAreaView>
 
-      {/* ボトムナビゲーション（スケルトン素材の丸ボタンリスト） */}
+      {/* ボトムナビゲーション（要件定義に基づくアイコン） */}
       <SafeAreaView style={styles.bottomContainer} pointerEvents="box-none" edges={['bottom']}>
         <View style={styles.bottomNavContainer}>
+          {/* マップ (アクティブ状態) */}
           <TouchableOpacity>
             <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism]}>
-              <MaterialCommunityIcons name="home" size={28} color={colors.primary} />
+              <MaterialCommunityIcons name="map-outline" size={28} color={colors.magenta} />
             </BlurView>
           </TouchableOpacity>
+          {/* コレクション/アルバム */}
           <TouchableOpacity>
             <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism]}>
-              <MaterialCommunityIcons name="silverware-fork-knife" size={28} color={colors.primary} />
+              <MaterialCommunityIcons name="folder-heart-outline" size={28} color={colors.primary} />
             </BlurView>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism]}>
-              <MaterialCommunityIcons name="run" size={28} color={colors.magenta} />
-            </BlurView>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism]}>
-              <MaterialCommunityIcons name="tshirt-crew" size={28} color={colors.primary} />
-            </BlurView>
-          </TouchableOpacity>
+          {/* ドロップ追加（中央で少し強調） */}
           <TouchableOpacity onPress={() => setDropModalVisible(true)}>
+            <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism, { borderColor: colors.cyan, borderWidth: 2 }]}>
+              <MaterialCommunityIcons name="plus-thick" size={32} color={colors.cyan} />
+            </BlurView>
+          </TouchableOpacity>
+          {/* フレンド */}
+          <TouchableOpacity>
             <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism]}>
-              <MaterialCommunityIcons name="plus" size={28} color={colors.cyan} />
+              <MaterialCommunityIcons name="account-multiple-outline" size={28} color={colors.primary} />
+            </BlurView>
+          </TouchableOpacity>
+          {/* アバター/プロフィール/ガチャ */}
+          <TouchableOpacity>
+            <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism]}>
+              <MaterialCommunityIcons name="account-circle-outline" size={28} color={colors.primary} />
             </BlurView>
           </TouchableOpacity>
         </View>
