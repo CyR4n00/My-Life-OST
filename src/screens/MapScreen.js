@@ -124,15 +124,6 @@ export default function MapScreen() {
         </View>
       </SafeAreaView>
 
-      {/* 検索バー風ヘッダー（スケルトン素材） */}
-      <SafeAreaView style={styles.headerContainer} pointerEvents="box-none">
-        <BlurView intensity={80} tint="light" style={[styles.searchBar, globalStyles.glassmorphism]}>
-          <MaterialCommunityIcons name="map-marker-outline" size={24} color={colors.magenta} />
-          <Text style={[globalStyles.textNormal, styles.searchText]}>Do you want to go Gym Beam?</Text>
-          <MaterialCommunityIcons name="check" size={24} color={colors.cyan} />
-        </BlurView>
-      </SafeAreaView>
-
       {/* ボトムナビゲーション（要件定義に基づくアイコン） */}
       <SafeAreaView style={styles.bottomContainer} pointerEvents="box-none" edges={['bottom']}>
         <View style={styles.bottomNavContainer}>
@@ -258,26 +249,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     opacity: 0.8,
-  },
-  headerContainer: {
-    position: 'absolute',
-    top: 40,
-    width: '100%',
-    paddingHorizontal: 20,
-  },
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-    borderRadius: 30,
-    overflow: 'hidden', // BlurViewの角丸を効かせるため
-  },
-  searchText: {
-    flex: 1,
-    marginLeft: 10,
-    fontSize: 16,
-    color: colors.text,
   },
   bottomContainer: {
     position: 'absolute',
