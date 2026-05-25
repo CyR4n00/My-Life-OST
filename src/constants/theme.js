@@ -1,12 +1,12 @@
 import { StyleSheet } from 'react-native';
 
 export const colors = {
-  background: '#0a0a0a',
-  radarGreen: '#39ff14', // レーダーっぽい蛍光グリーン
-  radarDarkGreen: '#0f380f',
-  text: '#ffffff',
-  accent: '#ff0055',
+  background: '#1a1a1a', // マップに合わせて少し調整
+  accent: '#ff0055',     // Y2Kっぽいビビッドなピンク
+  primary: '#00d0ff',    // サイバーなブルー
   gray: '#333333',
+  text: '#ffffff',
+  mapOverlay: 'rgba(0,0,0,0.3)',
 };
 
 export const globalStyles = StyleSheet.create({
@@ -15,7 +15,7 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   textRetro: {
-    fontFamily: 'monospace', // 初期は組み込みの等幅フォントでレトロ感を出す
-    color: colors.radarGreen,
+    fontFamily: 'monospace',
+    color: colors.primary,
   },
 });
