@@ -147,40 +147,13 @@ export default function MapScreen() {
         </View>
       </SafeAreaView>
 
-      {/* ボトムナビゲーション（要件定義に基づくアイコン） */}
-      <SafeAreaView style={styles.bottomContainer} pointerEvents="box-none" edges={['bottom']}>
-        <View style={styles.bottomNavContainer}>
-          {/* マップ (アクティブ状態) */}
-          <TouchableOpacity onPress={() => console.log('Map tapped')}>
-            <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism]}>
-              <MaterialCommunityIcons name="map-outline" size={28} color={colors.magenta} />
-            </BlurView>
-          </TouchableOpacity>
-          {/* コレクション/アルバム */}
-          <TouchableOpacity onPress={() => alert('機能開発中: 拾ったドロップのアルバム画面が開きます')}>
-            <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism]}>
-              <MaterialCommunityIcons name="folder-heart-outline" size={28} color={colors.primary} />
-            </BlurView>
-          </TouchableOpacity>
-          {/* ドロップ追加（中央で少し強調） */}
-          <TouchableOpacity onPress={handleOpenDropModal}>
-            <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism, { borderColor: colors.cyan, borderWidth: 2 }]}>
-              <MaterialCommunityIcons name="plus-thick" size={32} color={colors.cyan} />
-            </BlurView>
-          </TouchableOpacity>
-          {/* フレンド */}
-          <TouchableOpacity onPress={() => alert('機能開発中: フレンドリストと限定ドロップの機能画面が開きます')}>
-            <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism]}>
-              <MaterialCommunityIcons name="account-multiple-outline" size={28} color={colors.primary} />
-            </BlurView>
-          </TouchableOpacity>
-          {/* アバター/プロフィール/ガチャ */}
-          <TouchableOpacity onPress={() => alert('機能開発中: アバター着せ替え・プロフィール画面が開きます')}>
-            <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism]}>
-              <MaterialCommunityIcons name="account-circle-outline" size={28} color={colors.primary} />
-            </BlurView>
-          </TouchableOpacity>
-        </View>
+      {/* ドロップ追加（共通タブバーの上にフローティング表示） */}
+      <SafeAreaView style={styles.floatingButtonContainer} pointerEvents="box-none" edges={['bottom']}>
+        <TouchableOpacity style={styles.dropButtonWrapper} onPress={handleOpenDropModal}>
+          <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism, { borderColor: colors.cyan, borderWidth: 2 }]}>
+            <MaterialCommunityIcons name="plus-thick" size={32} color={colors.cyan} />
+          </BlurView>
+        </TouchableOpacity>
       </SafeAreaView>
 
       {/* ドロップUI（モーダル） */}
@@ -291,15 +264,16 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     fontWeight: 'bold',
   },
-  bottomContainer: {
+  floatingButtonContainer: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 30, // 共通タブバーと同じ高さに合わせて中央に配置
     width: '100%',
+    alignItems: 'center',
+    zIndex: 10, // タブバーの上に表示
   },
-  bottomNavContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    paddingHorizontal: 10,
+  dropButtonWrapper: {
+    // 共通タブバーの中央に重なるように調整
+    marginBottom: 0,
   },
   navButton: {
     width: 60,
