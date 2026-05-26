@@ -1,120 +1,87 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Svg, { Rect } from 'react-native-svg';
 import { colors } from '../constants/theme';
 
 /**
- * カスタマイズ可能なアバターを表示するコンポーネント
+ * カスタマイズ可能なドット絵アバターを表示するコンポーネント
  */
 export default function RetroAvatar({
   size = 60,
   bodyColor = colors.white,
-  borderColor = colors.cyan,
-  borderWidth = 2,
-  headgear = null, // e.g., 'crown', 'glass-wine'
-  eyewear = null,  // e.g., 'glasses', 'sunglasses'
+  borderColor = null, // ドット絵なので未使用
+  borderWidth = 0,    // ドット絵なので未使用
+  headgear = null,    // e.g., 'crown', 'cap'
+  eyewear = null,     // e.g., 'glasses', 'sunglasses'
   shoesColor = colors.primary, // ブーツの色
 }) {
-  const bodyWidth = size * 0.8;
-  const bodyHeight = size * 0.9;
+  const PIXEL_SIZE = size / 10;
+
+  // 10x10のドット絵マトリックス (0: 透明, 1: 体, 2: 目, 3: 靴, 4: アクセサリー)
+  // ベースとなるキャラクター
+  const baseMatrix = [
+    [0,0,0,1,1,1,1,0,0,0],
+    [0,0,1,1,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,1,1,0],
+    [0,1,1,2,1,1,2,1,1,0],
+    [0,1,1,2,1,1,2,1,1,0],
+    [0,1,1,1,1,1,1,1,1,0],
+    [0,0,1,1,1,1,1,1,0,0],
+    [0,0,0,1,1,1,1,0,0,0],
+    [0,0,0,3,3,0,3,3,0,0],
+    [0,0,3,3,3,0,3,3,3,0]
+  ];
+
+  const renderPixel = (val, x, y) => {
+    if (val === 0) return null;
+
+    let color = bodyColor;
+    if (val === 2) color = '#000000'; // 目
+    if (val === 3) color = shoesColor; // 靴
+
+    // アイテムによる上書き
+    if (headgear === 'crown') {
+        if (y === 0 && (x >= 2 && x <= 7)) return <Rect key={`${x}-${y}`} x={x * PIXEL_SIZE} y={y * PIXEL_SIZE} width={PIXEL_SIZE} height={PIXEL_SIZE} fill="#FFD700" />;
+        if (y === 1 && (x === 2 || x === 4 || x === 5 || x === 7)) return <Rect key={`${x}-${y}`} x={x * PIXEL_SIZE} y={y * PIXEL_SIZE} width={PIXEL_SIZE} height={PIXEL_SIZE} fill="#FFD700" />;
+    }
+
+    if (eyewear === 'sunglasses') {
+        if (y === 3 && x >= 2 && x <= 7) return <Rect key={`${x}-${y}`} x={x * PIXEL_SIZE} y={y * PIXEL_SIZE} width={PIXEL_SIZE} height={PIXEL_SIZE} fill="#333333" />;
+        if (y === 4 && (x === 3 || x === 6)) return <Rect key={`${x}-${y}`} x={x * PIXEL_SIZE} y={y * PIXEL_SIZE} width={PIXEL_SIZE} height={PIXEL_SIZE} fill="#333333" />;
+    }
+
+    return (
+      <Rect
+        key={`${x}-${y}`}
+        x={x * PIXEL_SIZE}
+        y={y * PIXEL_SIZE}
+        width={PIXEL_SIZE + 0.5} // 隙間防止
+        height={PIXEL_SIZE + 0.5} // 隙間防止
+        fill={color}
+      />
+    );
+  };
 
   return (
     <View style={[styles.container, { width: size, height: size }]}>
-      {/* 本体 */}
-      <View style={[
-        styles.body,
-        {
-          width: bodyWidth,
-          height: bodyHeight,
-          backgroundColor: bodyColor,
-          borderColor: borderColor,
-          borderWidth: borderWidth,
-        }
-      ]}>
-        {/* 目 */}
-        <View style={styles.eyesContainer}>
-          <View style={styles.eye} />
-          <View style={styles.eye} />
-        </View>
-
-        {/* メガネ / Eyewear */}
-        {eyewear && (
-          <View style={styles.eyewearContainer}>
-            <MaterialCommunityIcons name={eyewear} size={size * 0.4} color={colors.text} />
-          </View>
+      <Svg width={size} height={size}>
+        {baseMatrix.map((row, y) =>
+          row.map((val, x) => renderPixel(val, x, y))
         )}
-      </View>
-
-      {/* 足 (Boots) */}
-      <View style={[styles.shoesContainer, { width: bodyWidth }]}>
-        <View style={[styles.shoe, { backgroundColor: shoesColor }]} />
-        <View style={[styles.shoe, { backgroundColor: shoesColor }]} />
-      </View>
-
-      {/* 帽子 / Headgear */}
-      {headgear && (
-        <View style={styles.headgearContainer}>
-          <MaterialCommunityIcons name={headgear} size={size * 0.4} color={colors.accent} />
-        </View>
-      )}
+      </Svg>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    position: 'relative',
-    shadowColor: colors.magenta,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  body: {
-    borderRadius: 999, // 楕円形
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 2,
-  },
-  eyesContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '30%',
-    marginTop: '-10%', // 少し上に配置
-  },
-  eye: {
-    width: 6,
-    height: 12,
-    borderRadius: 3,
-    backgroundColor: '#000',
-  },
-  shoesContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    position: 'absolute',
-    bottom: -5,
-    zIndex: 1,
-  },
-  shoe: {
-    width: '25%',
-    height: 12,
-    borderBottomLeftRadius: 6,
-    borderBottomRightRadius: 6,
-    borderTopLeftRadius: 2,
-    borderTopRightRadius: 2,
-  },
-  headgearContainer: {
-    position: 'absolute',
-    top: -10,
-    zIndex: 3,
-  },
-  eyewearContainer: {
-    position: 'absolute',
-    top: '30%',
-    zIndex: 3,
+    // 影をつけるとドット絵っぽさが消える可能性があるので一旦オフか弱めに
+    shadowColor: colors.magenta,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 3,
   },
 });
