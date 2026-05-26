@@ -97,23 +97,50 @@ export default function EncounterModal({ visible, dropData, onClose }) {
 
       <View style={styles.contentContainer}>
 
-        {/* 開封後のメッセージカード */}
+        {/* 開封後のメッセージカード（ガラケーメール/レトロゲーム風） */}
         {phase === 'opened' && (
-          <Animated.View style={[styles.messageCard, globalStyles.glassmorphism, animatedMessageStyle]}>
-            <View style={styles.cardHeader}>
-              <View style={styles.iconWrapper}>
-                <MaterialCommunityIcons name={dropData.icon} size={24} color={colors.white} />
+          <Animated.View style={[styles.retroMessageCard, animatedMessageStyle]}>
+            {/* ガラケー風のヘッダーバー */}
+            <View style={styles.retroHeader}>
+              <MaterialCommunityIcons name="email-receive" size={16} color={colors.white} />
+              <Text style={[globalStyles.textPixel, styles.retroHeaderText]}>受信メール</Text>
+              <Text style={[globalStyles.textPixel, styles.retroHeaderTime]}>12:34</Text>
+            </View>
+
+            {/* メールのメタデータ */}
+            <View style={styles.retroMeta}>
+              <View style={styles.retroMetaRow}>
+                <Text style={styles.retroMetaLabel}>From:</Text>
+                <Text style={styles.retroMetaValue}>{dropData.user || 'UNKNOWN'}</Text>
               </View>
-              <Text style={[globalStyles.textPixel, styles.cardTitle]}>{dropData.title || 'SECRET DROP'}</Text>
+              <View style={styles.retroMetaRow}>
+                <Text style={styles.retroMetaLabel}>Sub:</Text>
+                <Text style={styles.retroMetaValue}>{dropData.title || 'SECRET DROP'}</Text>
+              </View>
             </View>
 
-            <View style={styles.cardBody}>
-              <Text style={styles.messageText}>{dropData.message || 'メッセージはありません。'}</Text>
+            {/* 写真添付枠（ダミー画像） */}
+            {dropData.hasPhoto && (
+              <View style={styles.retroPhotoContainer}>
+                <MaterialCommunityIcons name="image" size={40} color={colors.gray} />
+                <Text style={styles.retroPhotoText}>添付ファイル.jpg</Text>
+              </View>
+            )}
+
+            <View style={styles.retroBody}>
+              <Text style={styles.retroMessageText}>{dropData.message || 'メッセージはありません。'}</Text>
             </View>
 
-            <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
-              <Text style={styles.closeButtonText}>CLOSE</Text>
-            </TouchableOpacity>
+            <View style={styles.actionButtons}>
+              <TouchableOpacity style={styles.shareButton} onPress={() => alert('TikTok/Instagramにシェアしました！')}>
+                <MaterialCommunityIcons name="share-variant" size={20} color={colors.white} />
+                <Text style={styles.shareButtonText}>SHARE</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+                <Text style={styles.closeButtonText}>CLOSE</Text>
+              </TouchableOpacity>
+            </View>
           </Animated.View>
         )}
 
@@ -186,63 +213,118 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 0,
   },
-  messageCard: {
+  retroMessageCard: {
     width: width * 0.85,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 20,
-    padding: 20,
-    alignItems: 'center',
+    backgroundColor: '#d3d3d3', // レトロなグレー
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#888',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
+    elevation: 5,
   },
-  cardHeader: {
+  retroHeader: {
+    backgroundColor: colors.primary,
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
-    width: '100%',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.primaryLight,
-    paddingBottom: 10,
+    padding: 8,
+    borderBottomWidth: 2,
+    borderBottomColor: '#555',
   },
-  iconWrapper: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.magenta,
+  retroHeaderText: {
+    color: colors.white,
+    fontSize: 14,
+    marginLeft: 6,
+    flex: 1,
+  },
+  retroHeaderTime: {
+    color: colors.white,
+    fontSize: 12,
+  },
+  retroMeta: {
+    backgroundColor: '#fff',
+    padding: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#aaa',
+  },
+  retroMetaRow: {
+    flexDirection: 'row',
+    marginBottom: 4,
+  },
+  retroMetaLabel: {
+    width: 45,
+    fontSize: 14,
+    color: '#666',
+    fontWeight: 'bold',
+  },
+  retroMetaValue: {
+    flex: 1,
+    fontSize: 14,
+    color: '#333',
+  },
+  retroPhotoContainer: {
+    backgroundColor: '#e9e9e9',
+    height: 120,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#aaa',
   },
-  cardTitle: {
-    fontSize: 18,
-    color: colors.primary,
+  retroPhotoText: {
+    marginTop: 8,
+    fontSize: 12,
+    color: '#666',
   },
-  cardBody: {
-    width: '100%',
+  retroBody: {
+    backgroundColor: '#fff',
     minHeight: 100,
-    backgroundColor: 'rgba(107, 59, 255, 0.05)',
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 20,
+    padding: 12,
   },
-  messageText: {
-    fontSize: 16,
-    color: colors.text,
-    lineHeight: 24,
+  retroMessageText: {
+    fontFamily: 'monospace',
+    fontSize: 14,
+    color: '#000',
+    lineHeight: 20,
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 12,
+    backgroundColor: '#d3d3d3',
+    borderTopWidth: 1,
+    borderTopColor: '#aaa',
+  },
+  shareButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.magenta,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: '#880044',
+  },
+  shareButtonText: {
+    color: colors.white,
+    fontWeight: 'bold',
+    fontSize: 14,
+    marginLeft: 6,
   },
   closeButton: {
-    backgroundColor: colors.cyan,
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 25,
-    shadowColor: colors.cyan,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: '#999',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: '#555',
+    justifyContent: 'center',
   },
   closeButtonText: {
-    color: colors.text,
+    color: '#fff',
     fontWeight: 'bold',
-    fontSize: 16,
-    letterSpacing: 1,
+    fontSize: 14,
   },
 });

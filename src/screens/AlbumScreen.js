@@ -7,39 +7,42 @@ import { BlurView } from 'expo-blur';
 
 // 仮の拾ったドロップ履歴データ
 const MOCK_COLLECTION = [
-  { id: '1', date: '2023-10-24 14:30', location: 'Shibuya', icon: 'food-apple', title: 'Apple', message: 'お腹すいた', user: 'UserA_001' },
-  { id: '2', date: '2023-10-24 09:15', location: 'Shinjuku', icon: 'coffee', title: 'Coffee', message: 'ここのカフェおすすめ！', user: 'NeonCat' },
-  { id: '3', date: '2023-10-23 20:00', location: 'Harajuku', icon: 'music-note', title: 'Music', message: '路上ライブ最高だった', user: 'CyberBoy' },
-  { id: '4', date: '2023-10-22 18:45', location: 'Ikebukuro', icon: 'gamepad-variant', title: 'Game', message: 'ゲーセンで神引きした', user: 'Player1' },
+  { id: '1', date: '2023-10-24 14:30', location: 'Shibuya', title: '秘密の書き置き', message: '〇〇大学の食堂の端の席に、「次の講義ダルいね」という書き置き。', user: 'UserA_001', hasPhoto: true },
+  { id: '2', date: '2023-10-24 09:15', location: 'Shinjuku', title: '駅のホームで', message: 'ここの自販機、たまに当たりが出るよ！', user: 'NeonCat', hasPhoto: false },
+  { id: '3', date: '2023-10-23 20:00', location: 'Harajuku', title: '路上ライブ', message: '今日のバンド、エモすぎた。', user: 'CyberBoy', hasPhoto: true },
+  { id: '4', date: '2023-10-22 18:45', location: 'Ikebukuro', title: 'ゲーセン報告', message: 'クレーンゲームで神引きしたから記念に埋めとく。', user: 'Player1', hasPhoto: true },
 ];
 
 export default function AlbumScreen() {
   const renderItem = ({ item }) => (
-    <View style={styles.cardContainer}>
-      <BlurView intensity={80} tint="light" style={[styles.card, globalStyles.glassmorphism]}>
-        {/* ヘッダー部分：ユーザー名と日時 */}
-        <View style={styles.cardHeader}>
-          <View style={styles.userInfo}>
-            <MaterialCommunityIcons name="account-circle" size={20} color={colors.primary} />
-            <Text style={[globalStyles.textPixel, styles.username]}>{item.user}</Text>
-          </View>
-          <Text style={[globalStyles.textPixel, styles.date]}>{item.date}</Text>
-        </View>
+    <View style={styles.retroListCard}>
+      {/* ガラケー風リストアイテムヘッダー */}
+      <View style={styles.retroListHeader}>
+        <MaterialCommunityIcons name={item.hasPhoto ? "email-open" : "email-open-outline"} size={16} color={colors.primary} />
+        <Text style={[globalStyles.textPixel, styles.retroListTitle]} numberOfLines={1}>
+          {item.title}
+        </Text>
+        <Text style={[globalStyles.textPixel, styles.retroListDate]}>{item.date.split(' ')[0]}</Text>
+      </View>
 
-        {/* メインコンテンツ */}
-        <View style={styles.cardBody}>
-          <View style={styles.iconContainer}>
-            <MaterialCommunityIcons name={item.icon} size={36} color={colors.magenta} />
-          </View>
-          <View style={styles.messageContainer}>
-            <Text style={[globalStyles.textNormal, styles.message]}>{item.message}</Text>
-            <View style={styles.locationBadge}>
-              <MaterialCommunityIcons name="map-marker" size={14} color={colors.cyan} />
-              <Text style={styles.locationText}>{item.location}</Text>
-            </View>
+      <View style={styles.retroListBody}>
+        <View style={styles.retroListMeta}>
+          <Text style={styles.retroListUser}>From: {item.user}</Text>
+          <View style={styles.locationBadge}>
+            <MaterialCommunityIcons name="map-marker" size={12} color={colors.white} />
+            <Text style={styles.locationText}>{item.location}</Text>
           </View>
         </View>
-      </BlurView>
+        <Text style={styles.retroListMessage} numberOfLines={2}>
+          {item.message}
+        </Text>
+        {item.hasPhoto && (
+          <View style={styles.photoIndicator}>
+             <MaterialCommunityIcons name="paperclip" size={14} color="#666" />
+             <Text style={styles.photoIndicatorText}>画像添付あり</Text>
+          </View>
+        )}
+      </View>
     </View>
   );
 
@@ -79,72 +82,88 @@ const styles = StyleSheet.create({
   listContent: {
     padding: 15,
     paddingBottom: 100, // ボトムナビゲーションのスペース確保
+    backgroundColor: '#e6e6e6', // レトロな背景
   },
-  cardContainer: {
-    marginBottom: 15,
+  retroListCard: {
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#888',
+    borderRadius: 4,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 0,
+    elevation: 3,
   },
-  card: {
-    borderRadius: 16,
-    padding: 15,
-    overflow: 'hidden',
+  retroListHeader: {
+    backgroundColor: '#d3d3d3',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: '#aaa',
   },
-  cardHeader: {
+  retroListTitle: {
+    flex: 1,
+    marginLeft: 8,
+    fontSize: 14,
+    color: '#000',
+  },
+  retroListDate: {
+    fontSize: 12,
+    color: '#333',
+  },
+  retroListBody: {
+    padding: 10,
+  },
+  retroListMeta: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(107, 59, 255, 0.1)',
-    paddingBottom: 8,
+    marginBottom: 6,
   },
-  userInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  username: {
+  retroListUser: {
     fontSize: 12,
-    color: colors.primary,
-    marginLeft: 6,
+    fontWeight: 'bold',
+    color: '#555',
   },
-  date: {
-    fontSize: 10,
-    color: colors.gray,
+  retroListMessage: {
+    fontFamily: 'monospace',
+    fontSize: 14,
+    color: '#222',
+    lineHeight: 20,
+    marginBottom: 8,
   },
-  cardBody: {
+  photoIndicator: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    alignSelf: 'flex-start',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
-  iconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: 'rgba(255, 0, 255, 0.1)', // 薄いマゼンタ
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  messageContainer: {
-    flex: 1,
-  },
-  message: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: colors.text,
-    marginBottom: 8,
+  photoIndicatorText: {
+    fontSize: 10,
+    color: '#666',
+    marginLeft: 4,
   },
   locationBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 255, 255, 0.1)', // 薄いシアン
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    alignSelf: 'flex-start',
+    backgroundColor: colors.cyan,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
   },
   locationText: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'bold',
-    color: colors.primary,
-    marginLeft: 4,
+    color: colors.white,
+    marginLeft: 2,
   },
 });

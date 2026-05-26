@@ -46,6 +46,7 @@ export default function MapScreen() {
   const [isDropModalVisible, setDropModalVisible] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState(AVAILABLE_ICONS[0]);
   const [dropMessage, setDropMessage] = useState('');
+  const [attachedPhoto, setAttachedPhoto] = useState(null);
 
   // すれちがい（取得）モーダルの管理
   const [encounterData, setEncounterData] = useState(null);
@@ -64,10 +65,11 @@ export default function MapScreen() {
 
   const handleDrop = () => {
     // 実際はここでAPI等に送信し、新しいドロップを地図上に追加する処理を書く
-    console.log("Dropped:", { icon: selectedIcon, message: dropMessage });
+    console.log("Dropped:", { icon: selectedIcon, message: dropMessage, photo: attachedPhoto });
     setDropsLeft(prev => Math.max(0, prev - 1));
     setDropModalVisible(false);
     setDropMessage('');
+    setAttachedPhoto(null);
   };
 
   const handlePickDrop = (drop) => {
@@ -87,6 +89,31 @@ export default function MapScreen() {
           <Text style={[globalStyles.textNormal, { color: '#888', marginTop: 10 }]}>
             (Webプレビュー用モック: 本来はライトパープル系のマップが表示されます)
           </Text>
+
+          {/* テスト用のモックドロップ（Web検証用） */}
+          <TouchableOpacity
+            style={{ position: 'absolute', top: 150, left: 100 }}
+            onPress={() => handlePickDrop({
+              id: 1,
+              title: '秘密の書き置き',
+              message: '〇〇大学の食堂の端の席に、「次の講義ダルいね」という書き置き。',
+              user: 'Stranger_1',
+              hasPhoto: true,
+              color: colors.cyan
+            })}
+          >
+            <View style={styles.activeMarkerContainer}>
+                <MaterialCommunityIcons name="treasure-chest" size={20} color={colors.white} />
+                <Text style={styles.activeMarkerText}>12m</Text>
+                <View style={styles.activeMarkerTail} />
+            </View>
+          </TouchableOpacity>
+
+          <View style={{ position: 'absolute', top: 200, right: 100, ...styles.radarDotContainer }}>
+            <View style={styles.radarDotOuter} />
+            <View style={styles.radarDotInner} />
+            <Text style={styles.radarDistanceText}>85m</Text>
+          </View>
         </View>
       ) : (
         <MapView
@@ -117,45 +144,49 @@ export default function MapScreen() {
               </View>
             </Marker>
 
-          {/* ドロップのピン */}
-          {MOCK_DROPS.map((drop) => (
-            <Marker
-              key={drop.id}
-              coordinate={{ latitude: drop.lat, longitude: drop.lng }}
-              onPress={() => handlePickDrop({
-                ...drop,
-                message: '偶然通りかかったね！よろしく！', // モックのメッセージ
-                user: 'Stranger_' + drop.id,
-                userIcon: 'alien-outline'
-              })}
-            >
-                <View style={styles.markerContainer}>
-                  <MaterialCommunityIcons name={drop.icon} size={22} color={colors.accent} />
-                  {/* 下向きの三角形（吹き出しのしっぽ） */}
-                  <View style={styles.markerTail} />
-              </View>
-            </Marker>
-          ))}
+          {/* ドロップのピン（レーダー風表示） */}
+          {MOCK_DROPS.map((drop) => {
+            // 仮の距離計算（実際はHaversine式などで計算）
+            // id=1 は近く(12m)、id=2は遠く(85m)というモック
+            const distance = drop.id === 1 ? 12 : drop.id === 2 ? 85 : 200;
+            const isClose = distance <= 50;
 
-            {/* アクティブなドロップのピン（モック） */}
-            <Marker
-              coordinate={{ latitude: SHIBUYA_LAT - 0.0001, longitude: SHIBUYA_LNG - 0.0002 }}
-              onPress={() => handlePickDrop({
-                icon: 'weight-lifter',
-                title: 'Gym Beam',
-                message: '今日の筋トレ最高だったわ💪',
-                user: 'MachoMan',
-                userIcon: 'arm-flex-outline',
-                color: colors.cyan
-              })}
-            >
-                <View style={styles.activeMarkerContainer}>
-                    <MaterialCommunityIcons name="weight-lifter" size={24} color={colors.white} />
-                    <Text style={styles.activeMarkerText}>Gym Beam</Text>
-                    <MaterialCommunityIcons name="chevron-right" size={20} color={colors.white} />
-                    <View style={styles.activeMarkerTail} />
-                </View>
-            </Marker>
+            return (
+              <Marker
+                key={drop.id}
+                coordinate={{ latitude: drop.lat, longitude: drop.lng }}
+                onPress={() => {
+                  if (isClose) {
+                    handlePickDrop({
+                      ...drop,
+                      message: '偶然通りかかったね！よろしく！',
+                      user: 'Stranger_' + drop.id,
+                      userIcon: 'alien-outline',
+                      hasPhoto: drop.id === 1 // モックで写真あり判定
+                    });
+                  } else {
+                    alert('近づかないと開けません！');
+                  }
+                }}
+              >
+                {isClose ? (
+                  // 近くにある場合（拾える）
+                  <View style={styles.activeMarkerContainer}>
+                      <MaterialCommunityIcons name="treasure-chest" size={20} color={colors.white} />
+                      <Text style={styles.activeMarkerText}>{distance}m</Text>
+                      <View style={styles.activeMarkerTail} />
+                  </View>
+                ) : (
+                  // 遠くにある場合（光るドット）
+                  <View style={styles.radarDotContainer}>
+                    <View style={styles.radarDotOuter} />
+                    <View style={styles.radarDotInner} />
+                    <Text style={styles.radarDistanceText}>{distance}m</Text>
+                  </View>
+                )}
+              </Marker>
+            );
+          })}
         </MapView>
       )}
 
@@ -224,7 +255,21 @@ export default function MapScreen() {
               ))}
             </ScrollView>
 
-            <Text style={styles.modalSectionTitle}>MESSAGE</Text>
+            <Text style={styles.modalSectionTitle}>PHOTO & MESSAGE</Text>
+            <TouchableOpacity
+              style={styles.photoAttachButton}
+              onPress={() => setAttachedPhoto(!attachedPhoto)}
+            >
+              <MaterialCommunityIcons
+                name={attachedPhoto ? "image-check" : "camera-plus"}
+                size={24}
+                color={attachedPhoto ? colors.magenta : colors.primary}
+              />
+              <Text style={[styles.photoAttachText, attachedPhoto && {color: colors.magenta}]}>
+                {attachedPhoto ? "Photo Attached" : "Attach a Photo"}
+              </Text>
+            </TouchableOpacity>
+
             <TextInput
               style={styles.textInput}
               placeholder="What's happening here?"
@@ -393,7 +438,8 @@ const styles = StyleSheet.create({
   activeMarkerTail: {
     position: 'absolute',
     bottom: -8,
-    left: 20, // 左寄せ気味
+    left: '50%',
+    marginLeft: -8,
     width: 0,
     height: 0,
     borderLeftWidth: 8,
@@ -404,6 +450,38 @@ const styles = StyleSheet.create({
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
     borderTopColor: colors.accent,
+  },
+  radarDotContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  radarDotOuter: {
+    position: 'absolute',
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0, 255, 255, 0.4)',
+  },
+  radarDotInner: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: colors.cyan,
+    shadowColor: colors.cyan,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  radarDistanceText: {
+    fontSize: 10,
+    color: colors.white,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingHorizontal: 4,
+    borderRadius: 4,
+    marginTop: 4,
+    overflow: 'hidden',
+    fontWeight: 'bold',
   },
   modalOverlay: {
     flex: 1,
@@ -449,13 +527,28 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 3,
   },
+  photoAttachButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    padding: 12,
+    borderRadius: 15,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: colors.primaryLight,
+  },
+  photoAttachText: {
+    marginLeft: 10,
+    color: colors.primary,
+    fontWeight: 'bold',
+  },
   textInput: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
     borderWidth: 1,
     borderColor: colors.primaryLight,
     borderRadius: 15,
     padding: 15,
-    height: 100,
+    height: 80,
     textAlignVertical: 'top',
     fontSize: 16,
     color: colors.text,
