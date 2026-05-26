@@ -121,13 +121,13 @@ export default function EncounterModal({ visible, dropData, onClose }) {
         <View style={styles.avatarLayer} pointerEvents="none">
           {/* 左側：自分 */}
           <Animated.View style={[styles.avatarWrapper, animatedLeftStyle]}>
-             <RetroAvatar size={80} iconName="robot-happy-outline" backgroundColor={colors.primary} />
+             <RetroAvatar size={80} bodyColor={colors.white} eyewear="sunglasses" />
              {phase === 'opened' && <Text style={[globalStyles.textPixel, styles.avatarLabel]}>YOU</Text>}
           </Animated.View>
 
           {/* 右側：相手 */}
           <Animated.View style={[styles.avatarWrapper, animatedRightStyle]}>
-             <RetroAvatar size={80} iconName={dropData.userIcon || 'alien-outline'} backgroundColor={dropData.color || colors.magenta} />
+             <RetroAvatar size={80} bodyColor={dropData.color || colors.magenta} headgear="crown" />
              {phase === 'opened' && <Text style={[globalStyles.textPixel, styles.avatarLabel]}>{dropData.user || 'UNKNOWN'}</Text>}
           </Animated.View>
         </View>

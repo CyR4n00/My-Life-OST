@@ -5,6 +5,7 @@ import { colors, globalStyles } from '../constants/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import EncounterModal from '../components/EncounterModal';
+import RetroAvatar from '../components/RetroAvatar';
 
 // Webでは react-native-maps がデフォルトでは動かないため、フォールバックを用意する
 let MapView, Marker, Circle;
@@ -103,8 +104,16 @@ export default function MapScreen() {
               fillColor={'rgba(107, 59, 255, 0.2)'}
           />
             <Marker coordinate={{ latitude: SHIBUYA_LAT, longitude: SHIBUYA_LNG }}>
-              <View style={styles.currentLocationDot}>
-                <View style={styles.currentLocationInnerDot} />
+              <View style={styles.avatarMarkerContainer}>
+                <RetroAvatar
+                  size={50}
+                  bodyColor={colors.white}
+                  borderColor={colors.cyan}
+                  shoesColor={colors.primary}
+                  // eyewear="sunglasses"
+                  // headgear="crown"
+                />
+                <View style={styles.avatarMarkerTail} />
               </View>
             </Marker>
 
@@ -314,24 +323,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     overflow: 'hidden',
   },
-  currentLocationDot: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: colors.white,
-    justifyContent: 'center',
+  avatarMarkerContainer: {
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
+    justifyContent: 'center',
+    width: 60,
+    height: 70, // tail分の高さを確保
   },
-  currentLocationInnerDot: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    backgroundColor: colors.primary,
+  avatarMarkerTail: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 6,
+    borderRightWidth: 6,
+    borderTopWidth: 8,
+    borderStyle: 'solid',
+    backgroundColor: 'transparent',
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: colors.primary, // アバターの色と合わせるか、アクセントカラー
+    marginTop: -5, // アバターに少し被せる
   },
   markerContainer: {
     backgroundColor: colors.white,

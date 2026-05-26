@@ -18,7 +18,7 @@ export default function FriendScreen() {
   const renderItem = ({ item }) => (
     <BlurView intensity={80} tint="light" style={[styles.friendCard, globalStyles.glassmorphism]}>
       <View style={{ marginRight: 15 }}>
-        <RetroAvatar size={46} iconName={item.icon} backgroundColor={item.color} borderWidth={1} />
+        <RetroAvatar size={46} bodyColor={item.color} headgear="headphones" borderWidth={1} />
       </View>
       <View style={styles.friendInfo}>
         <Text style={[globalStyles.textPixel, styles.friendName]}>{item.name}</Text>
