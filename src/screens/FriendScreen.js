@@ -1,23 +1,24 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, globalStyles } from '../constants/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
+import RetroAvatar from '../components/RetroAvatar';
 
 // 仮のフレンドデータ
 const MOCK_FRIENDS = [
-  { id: '1', name: 'CyberBoy', status: 'Online', isClose: true },
-  { id: '2', name: 'NeonCat', status: 'Last seen 2h ago', isClose: false },
-  { id: '3', name: 'UserA_001', status: 'Online', isClose: true },
-  { id: '4', name: 'Player1', status: 'Last seen 1d ago', isClose: false },
+  { id: '1', name: 'CyberBoy', status: 'Online', isClose: true, icon: 'robot-outline', color: colors.magenta },
+  { id: '2', name: 'NeonCat', status: 'Last seen 2h ago', isClose: false, icon: 'cat', color: colors.accent },
+  { id: '3', name: 'UserA_001', status: 'Online', isClose: true, icon: 'alien-outline', color: colors.cyan },
+  { id: '4', name: 'Player1', status: 'Last seen 1d ago', isClose: false, icon: 'gamepad-variant-outline', color: colors.primary },
 ];
 
 export default function FriendScreen() {
   const renderItem = ({ item }) => (
     <BlurView intensity={80} tint="light" style={[styles.friendCard, globalStyles.glassmorphism]}>
-      <View style={styles.avatarPlaceholder}>
-        <MaterialCommunityIcons name="robot-outline" size={24} color={colors.white} />
+      <View style={{ marginRight: 15 }}>
+        <RetroAvatar size={46} iconName={item.icon} backgroundColor={item.color} borderWidth={1} />
       </View>
       <View style={styles.friendInfo}>
         <Text style={[globalStyles.textPixel, styles.friendName]}>{item.name}</Text>
@@ -120,15 +121,6 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 16,
     marginBottom: 10,
-  },
-  avatarPlaceholder: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    backgroundColor: colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 15,
   },
   friendInfo: {
     flex: 1,

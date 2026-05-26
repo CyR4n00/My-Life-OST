@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, globalStyles } from '../constants/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
+import EncounterModal from '../components/EncounterModal';
 
 // Webでは react-native-maps がデフォルトでは動かないため、フォールバックを用意する
 let MapView, Marker, Circle;
@@ -45,6 +46,9 @@ export default function MapScreen() {
   const [selectedIcon, setSelectedIcon] = useState(AVAILABLE_ICONS[0]);
   const [dropMessage, setDropMessage] = useState('');
 
+  // すれちがい（取得）モーダルの管理
+  const [encounterData, setEncounterData] = useState(null);
+
   // ドロップ回数の管理（初期値3）
   const [dropsLeft, setDropsLeft] = useState(3);
   const MAX_DROPS = 3;
@@ -63,6 +67,11 @@ export default function MapScreen() {
     setDropsLeft(prev => Math.max(0, prev - 1));
     setDropModalVisible(false);
     setDropMessage('');
+  };
+
+  const handlePickDrop = (drop) => {
+    // ドロップを拾った際のアクション（すれちがいエフェクトを開始）
+    setEncounterData(drop);
   };
 
   return (
@@ -104,7 +113,12 @@ export default function MapScreen() {
             <Marker
               key={drop.id}
               coordinate={{ latitude: drop.lat, longitude: drop.lng }}
-              title={drop.title}
+              onPress={() => handlePickDrop({
+                ...drop,
+                message: '偶然通りかかったね！よろしく！', // モックのメッセージ
+                user: 'Stranger_' + drop.id,
+                userIcon: 'alien-outline'
+              })}
             >
                 <View style={styles.markerContainer}>
                   <MaterialCommunityIcons name={drop.icon} size={22} color={colors.accent} />
@@ -115,7 +129,17 @@ export default function MapScreen() {
           ))}
 
             {/* アクティブなドロップのピン（モック） */}
-            <Marker coordinate={{ latitude: SHIBUYA_LAT - 0.0001, longitude: SHIBUYA_LNG - 0.0002 }}>
+            <Marker
+              coordinate={{ latitude: SHIBUYA_LAT - 0.0001, longitude: SHIBUYA_LNG - 0.0002 }}
+              onPress={() => handlePickDrop({
+                icon: 'weight-lifter',
+                title: 'Gym Beam',
+                message: '今日の筋トレ最高だったわ💪',
+                user: 'MachoMan',
+                userIcon: 'arm-flex-outline',
+                color: colors.cyan
+              })}
+            >
                 <View style={styles.activeMarkerContainer}>
                     <MaterialCommunityIcons name="weight-lifter" size={24} color={colors.white} />
                     <Text style={styles.activeMarkerText}>Gym Beam</Text>
@@ -212,6 +236,13 @@ export default function MapScreen() {
           </View>
         </KeyboardAvoidingView>
       </Modal>
+
+      {/* すれちがい通信風の交流エフェクトモーダル */}
+      <EncounterModal
+        visible={!!encounterData}
+        dropData={encounterData}
+        onClose={() => setEncounterData(null)}
+      />
     </View>
   );
 }

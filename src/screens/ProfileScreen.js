@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, globalStyles } from '../constants/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
+import RetroAvatar from '../components/RetroAvatar';
 
 export default function ProfileScreen() {
   return (
@@ -16,10 +17,7 @@ export default function ProfileScreen() {
         {/* アバター＆ステータスエリア */}
         <BlurView intensity={80} tint="light" style={[styles.profileCard, globalStyles.glassmorphism]}>
           <View style={styles.avatarContainer}>
-            {/* プレースホルダーとしてアイコンを使用。本来はアバター画像が入る */}
-            <View style={styles.avatarPlaceholder}>
-               <MaterialCommunityIcons name="robot-outline" size={60} color={colors.white} />
-            </View>
+            <RetroAvatar size={100} iconName="robot-happy-outline" />
             <TouchableOpacity style={styles.editAvatarBtn}>
               <MaterialCommunityIcons name="pencil" size={16} color={colors.white} />
             </TouchableOpacity>
@@ -105,16 +103,6 @@ const styles = StyleSheet.create({
   avatarContainer: {
     position: 'relative',
     marginBottom: 15,
-  },
-  avatarPlaceholder: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 3,
-    borderColor: colors.cyan,
   },
   editAvatarBtn: {
     position: 'absolute',
