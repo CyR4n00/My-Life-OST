@@ -40,3 +40,96 @@ If you don't want to see this message, you can disable the `strict` mode. Refer 
 https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
 Web  ERROR  Internal React error: Expected static flag was missing. Please notify the React team.
 Web  WARN  "email-receive" is not a valid icon name for family "material-community"
+Web Bundled 1763ms index.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  "shadow*" style props are deprecated. Use "boxShadow".
+Web  WARN  "textShadow*" style props are deprecated. Use "textShadow".
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"}
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+Web  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
+
+If you don't want to see this message, you can disable the `strict` mode. Refer to:
+https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
+Web  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
+
+If you don't want to see this message, you can disable the `strict` mode. Refer to:
+https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
+Web  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
+
+If you don't want to see this message, you can disable the `strict` mode. Refer to:
+https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
+Web  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
+
+If you don't want to see this message, you can disable the `strict` mode. Refer to:
+https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
+Web  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
+
+If you don't want to see this message, you can disable the `strict` mode. Refer to:
+https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
+Web  ERROR  Internal React error: Expected static flag was missing. Please notify the React team.
+Web  WARN  "email-receive" is not a valid icon name for family "material-community"
+Web Bundled 72ms index.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  "shadow*" style props are deprecated. Use "boxShadow".
+Web  WARN  "textShadow*" style props are deprecated. Use "textShadow".
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"}
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+Web  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
+
+If you don't want to see this message, you can disable the `strict` mode. Refer to:
+https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
+Web  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
+
+If you don't want to see this message, you can disable the `strict` mode. Refer to:
+https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
+Web  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
+
+If you don't want to see this message, you can disable the `strict` mode. Refer to:
+https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
+Web  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
+
+If you don't want to see this message, you can disable the `strict` mode. Refer to:
+https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
+Web  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
+
+If you don't want to see this message, you can disable the `strict` mode. Refer to:
+https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
+Web  ERROR  Internal React error: Expected static flag was missing. Please notify the React team.
+Web  WARN  "email-receive" is not a valid icon name for family "material-community"
+Web Bundled 214ms index.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  "shadow*" style props are deprecated. Use "boxShadow".
+Web  WARN  "textShadow*" style props are deprecated. Use "textShadow".
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"}
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+Web  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
+
+If you don't want to see this message, you can disable the `strict` mode. Refer to:
+https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
+Web  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
+
+If you don't want to see this message, you can disable the `strict` mode. Refer to:
+https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
+Web  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
+
+If you don't want to see this message, you can disable the `strict` mode. Refer to:
+https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
+Web  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
+
+If you don't want to see this message, you can disable the `strict` mode. Refer to:
+https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
+Web  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
+
+If you don't want to see this message, you can disable the `strict` mode. Refer to:
+https://docs.swmansion.com/react-native-reanimated/docs/debugging/logger-configuration for more details.
+Web  ERROR  Internal React error: Expected static flag was missing. Please notify the React team.
+Web  WARN  "email-receive" is not a valid icon name for family "material-community"

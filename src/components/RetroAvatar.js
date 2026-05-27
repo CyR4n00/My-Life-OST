@@ -77,11 +77,5 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    // 影をつけるとドット絵っぽさが消える可能性があるので一旦オフか弱めに
-    shadowColor: colors.magenta,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    elevation: 3,
   },
 });

@@ -124,12 +124,6 @@ export default function MapScreen() {
             userInterfaceStyle="light" // ライトテーマに変更
         >
             {/* 現在地の擬似的な表現 */}
-          <Circle
-            center={{ latitude: SHIBUYA_LAT, longitude: SHIBUYA_LNG }}
-              radius={80} // 取得可能範囲
-              strokeWidth={0}
-              fillColor={'rgba(107, 59, 255, 0.2)'}
-          />
             <Marker coordinate={{ latitude: SHIBUYA_LAT, longitude: SHIBUYA_LNG }}>
               <View style={styles.avatarMarkerContainer}>
                 <RetroAvatar
@@ -212,11 +206,9 @@ export default function MapScreen() {
       </SafeAreaView>
 
       {/* ドロップ追加（共通タブバーの上にフローティング表示） */}
-      <SafeAreaView style={styles.floatingButtonContainer} pointerEvents="box-none" edges={['bottom']}>
-        <TouchableOpacity style={styles.dropButtonWrapper} onPress={handleOpenDropModal}>
-          <BlurView intensity={80} tint="light" style={[styles.navButton, globalStyles.glassmorphism, { borderColor: colors.cyan, borderWidth: 2 }]}>
-            <MaterialCommunityIcons name="plus-thick" size={32} color={colors.cyan} />
-          </BlurView>
+      <SafeAreaView style={styles.floatingButtonContainer} pointerEvents="box-none" edges={['bottom', 'right']}>
+        <TouchableOpacity style={styles.fabButton} onPress={handleOpenDropModal}>
+            <MaterialCommunityIcons name="pencil-plus" size={36} color={colors.white} />
         </TouchableOpacity>
       </SafeAreaView>
 
@@ -232,59 +224,67 @@ export default function MapScreen() {
         >
           <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFill} />
 
-          <View style={[styles.modalContent, globalStyles.glassmorphism]}>
-            <Text style={[globalStyles.textPixel, styles.modalTitle]}>NEW DROP</Text>
+          <View style={styles.retroModalContent}>
+            {/* ガラケー/レトロ風のヘッダー */}
+            <View style={styles.retroModalHeader}>
+              <MaterialCommunityIcons name="pencil-box" size={16} color={colors.white} />
+              <Text style={[globalStyles.textPixel, styles.retroModalTitle]}>新規作成 (DROP)</Text>
+            </View>
 
-            <Text style={styles.modalSectionTitle}>SELECT ICON</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.iconSelector}>
-              {AVAILABLE_ICONS.map((iconName) => (
-                <TouchableOpacity
-                  key={iconName}
-                  style={[
-                    styles.iconOption,
-                    selectedIcon === iconName && styles.iconOptionSelected
-                  ]}
-                  onPress={() => setSelectedIcon(iconName)}
-                >
-                  <MaterialCommunityIcons
-                    name={iconName}
-                    size={28}
-                    color={selectedIcon === iconName ? colors.white : colors.primary}
-                  />
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
+            <View style={styles.retroModalBody}>
+              <Text style={styles.retroModalSectionTitle}>ICON</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.retroIconSelector}>
+                {AVAILABLE_ICONS.map((iconName) => (
+                  <TouchableOpacity
+                    key={iconName}
+                    style={[
+                      styles.retroIconOption,
+                      selectedIcon === iconName && styles.retroIconOptionSelected
+                    ]}
+                    onPress={() => setSelectedIcon(iconName)}
+                  >
+                    <MaterialCommunityIcons
+                      name={iconName}
+                      size={28}
+                      color={selectedIcon === iconName ? '#fff' : '#666'}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
 
-            <Text style={styles.modalSectionTitle}>PHOTO & MESSAGE</Text>
-            <TouchableOpacity
-              style={styles.photoAttachButton}
-              onPress={() => setAttachedPhoto(!attachedPhoto)}
-            >
-              <MaterialCommunityIcons
-                name={attachedPhoto ? "image-check" : "camera-plus"}
-                size={24}
-                color={attachedPhoto ? colors.magenta : colors.primary}
-              />
-              <Text style={[styles.photoAttachText, attachedPhoto && {color: colors.magenta}]}>
-                {attachedPhoto ? "Photo Attached" : "Attach a Photo"}
-              </Text>
-            </TouchableOpacity>
-
-            <TextInput
-              style={styles.textInput}
-              placeholder="What's happening here?"
-              placeholderTextColor={colors.gray}
-              value={dropMessage}
-              onChangeText={setDropMessage}
-              multiline
-            />
-
-            <View style={styles.modalButtonContainer}>
-              <TouchableOpacity style={styles.cancelButton} onPress={() => setDropModalVisible(false)}>
-                <Text style={styles.cancelButtonText}>CANCEL</Text>
+              <Text style={styles.retroModalSectionTitle}>ATTACHMENT</Text>
+              <TouchableOpacity
+                style={[styles.retroPhotoAttachButton, attachedPhoto && styles.retroPhotoAttachButtonActive]}
+                onPress={() => setAttachedPhoto(!attachedPhoto)}
+              >
+                <MaterialCommunityIcons
+                  name={attachedPhoto ? "image-check" : "camera-plus"}
+                  size={24}
+                  color={attachedPhoto ? '#fff' : '#333'}
+                />
+                <Text style={[styles.retroPhotoAttachText, attachedPhoto && {color: '#fff'}]}>
+                  {attachedPhoto ? "添付ファイル.jpg" : "写真を選択する"}
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.submitButton} onPress={handleDrop}>
-                <Text style={styles.submitButtonText}>DROP IT</Text>
+
+              <Text style={styles.retroModalSectionTitle}>MESSAGE</Text>
+              <TextInput
+                style={styles.retroTextInput}
+                placeholder="ここにテキストを入力..."
+                placeholderTextColor="#999"
+                value={dropMessage}
+                onChangeText={setDropMessage}
+                multiline
+              />
+            </View>
+
+            {/* ガラケー風アクションボタン */}
+            <View style={styles.retroModalActionButtons}>
+              <TouchableOpacity style={styles.retroCancelButton} onPress={() => setDropModalVisible(false)}>
+                <Text style={styles.retroCancelButtonText}>戻る</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.retroSubmitButton} onPress={handleDrop}>
+                <Text style={styles.retroSubmitButtonText}>埋める</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -351,22 +351,24 @@ const styles = StyleSheet.create({
   },
   floatingButtonContainer: {
     position: 'absolute',
-    bottom: 30, // 共通タブバーと同じ高さに合わせて中央に配置
-    width: '100%',
-    alignItems: 'center',
-    zIndex: 10, // タブバーの上に表示
+    bottom: 90, // タブバーの上
+    right: 20, // 右下に配置
+    zIndex: 10,
   },
-  dropButtonWrapper: {
-    // 共通タブバーの中央に重なるように調整
-    marginBottom: 0,
-  },
-  navButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+  fabButton: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: colors.magenta,
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    elevation: 8,
+    borderWidth: 3,
+    borderColor: '#fff',
   },
   avatarMarkerContainer: {
     alignItems: 'center',
@@ -485,106 +487,135 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+    paddingBottom: 40,
   },
-  modalContent: {
-    width: width * 0.85,
-    padding: 20,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+  retroModalContent: {
+    width: width * 0.95,
+    backgroundColor: '#d3d3d3',
+    borderRadius: 12,
+    borderWidth: 3,
+    borderColor: '#888',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 0,
+    elevation: 5,
   },
-  modalTitle: {
-    fontSize: 20,
-    color: colors.magenta,
-    textAlign: 'center',
-    marginBottom: 20,
+  retroModalHeader: {
+    backgroundColor: colors.magenta,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 8,
+    borderBottomWidth: 2,
+    borderBottomColor: '#555',
   },
-  modalSectionTitle: {
+  retroModalTitle: {
+    color: colors.white,
+    fontSize: 14,
+    marginLeft: 6,
+    flex: 1,
+  },
+  retroModalBody: {
+    padding: 15,
+    backgroundColor: '#e6e6e6',
+  },
+  retroModalSectionTitle: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: colors.gray,
-    marginBottom: 10,
+    color: '#333',
+    marginBottom: 6,
+    fontFamily: 'monospace',
   },
-  iconSelector: {
+  retroIconSelector: {
     flexDirection: 'row',
-    marginBottom: 20,
+    marginBottom: 15,
   },
-  iconOption: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: 'rgba(107, 59, 255, 0.1)',
+  retroIconOption: {
+    width: 44,
+    height: 44,
+    borderRadius: 4,
+    backgroundColor: '#ccc',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 10,
+    marginRight: 8,
+    borderWidth: 1,
+    borderColor: '#aaa',
   },
-  iconOptionSelected: {
+  retroIconOptionSelected: {
     backgroundColor: colors.magenta,
-    shadowColor: colors.magenta,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
-    elevation: 3,
+    borderColor: '#550022',
   },
-  photoAttachButton: {
+  retroPhotoAttachButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: '#fff',
     padding: 12,
-    borderRadius: 15,
-    marginBottom: 10,
+    borderRadius: 4,
     borderWidth: 1,
-    borderColor: colors.primaryLight,
+    borderColor: '#aaa',
+    marginBottom: 15,
   },
-  photoAttachText: {
+  retroPhotoAttachButtonActive: {
+    backgroundColor: colors.cyan,
+    borderColor: '#005555',
+  },
+  retroPhotoAttachText: {
     marginLeft: 10,
-    color: colors.primary,
+    color: '#333',
     fontWeight: 'bold',
+    fontSize: 14,
   },
-  textInput: {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+  retroTextInput: {
+    backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: colors.primaryLight,
-    borderRadius: 15,
-    padding: 15,
+    borderColor: '#aaa',
+    borderRadius: 4,
+    padding: 12,
     height: 80,
     textAlignVertical: 'top',
-    fontSize: 16,
-    color: colors.text,
-    marginBottom: 20,
+    fontSize: 14,
+    color: '#000',
+    fontFamily: 'monospace',
   },
-  modalButtonContainer: {
+  retroModalActionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    padding: 16,
+    backgroundColor: '#d3d3d3',
+    borderTopWidth: 2,
+    borderTopColor: '#aaa',
   },
-  cancelButton: {
+  retroCancelButton: {
     flex: 1,
-    paddingVertical: 15,
-    marginRight: 10,
-    borderRadius: 30,
-    backgroundColor: 'rgba(0,0,0,0.05)',
+    paddingVertical: 16,
+    marginRight: 8,
+    borderRadius: 8,
+    backgroundColor: '#999',
     alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#555',
   },
-  cancelButtonText: {
-    color: colors.gray,
+  retroCancelButtonText: {
+    color: '#fff',
     fontWeight: 'bold',
+    fontSize: 18,
   },
-  submitButton: {
+  retroSubmitButton: {
     flex: 1,
-    paddingVertical: 15,
-    marginLeft: 10,
-    borderRadius: 30,
+    paddingVertical: 16,
+    marginLeft: 8,
+    borderRadius: 8,
     backgroundColor: colors.cyan,
     alignItems: 'center',
-    shadowColor: colors.cyan,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
-    elevation: 3,
+    borderWidth: 2,
+    borderColor: '#005555',
   },
-  submitButtonText: {
-    color: colors.text,
+  retroSubmitButtonText: {
+    color: colors.white,
     fontWeight: 'bold',
+    fontSize: 18,
   },
 });
