@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Alert } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -102,7 +102,7 @@ export default function EncounterModal({ visible, dropData, onClose }) {
           <Animated.View style={[styles.retroMessageCard, animatedMessageStyle]}>
             {/* ガラケー風のヘッダーバー */}
             <View style={styles.retroHeader}>
-              <MaterialCommunityIcons name="email-receive" size={16} color={colors.white} />
+              <MaterialCommunityIcons name="email-arrow-right" size={16} color={colors.white} />
               <Text style={[globalStyles.textPixel, styles.retroHeaderText]}>受信メール</Text>
               <Text style={[globalStyles.textPixel, styles.retroHeaderTime]}>12:34</Text>
             </View>
@@ -132,7 +132,7 @@ export default function EncounterModal({ visible, dropData, onClose }) {
             </View>
 
             <View style={styles.actionButtons}>
-              <TouchableOpacity style={styles.shareButton} onPress={() => alert('TikTok/Instagramにシェアしました！')}>
+              <TouchableOpacity style={styles.shareButton} onPress={() => Alert.alert('シェア', 'TikTok/Instagramにシェアしました！')}>
                 <MaterialCommunityIcons name="share-variant" size={20} color={colors.white} />
                 <Text style={styles.shareButtonText}>SHARE</Text>
               </TouchableOpacity>

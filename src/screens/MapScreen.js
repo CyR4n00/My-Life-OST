@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Platform, Modal, TextInput, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Modal, Dimensions, TextInput, ScrollView, Platform, KeyboardAvoidingView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, globalStyles } from '../constants/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -59,7 +59,7 @@ export default function MapScreen() {
     if (dropsLeft > 0) {
       setDropModalVisible(true);
     } else {
-      alert("今日のドロップ回数を使い切りました。明日まで待つか、プレミアム機能で回復してください！");
+      Alert.alert("通知", "今日のドロップ回数を使い切りました。明日まで待つか、プレミアム機能で回復してください！");
     }
   };
 
@@ -159,7 +159,7 @@ export default function MapScreen() {
                       hasPhoto: drop.id === 1 // モックで写真あり判定
                     });
                   } else {
-                    alert('近づかないと開けません！');
+                    Alert.alert('遠すぎます', '近づかないと開けません！');
                   }
                 }}
               >
