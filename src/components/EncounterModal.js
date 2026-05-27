@@ -162,7 +162,7 @@ export default function EncounterModal({ visible, dropData, onClose }) {
         {/* 出会った瞬間のテキスト演出 */}
         {phase === 'meeting' && (
            <View style={styles.meetingTextContainer}>
-             <Text style={[globalStyles.textPixel, styles.meetingText]}>ENCOUNTER!</Text>
+             <Text style={[globalStyles.textPixel, styles.meetingText]}>エンカウント!</Text>
            </View>
         )}
 

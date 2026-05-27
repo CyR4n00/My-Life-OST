@@ -208,7 +208,8 @@ export default function MapScreen() {
       {/* ドロップ追加（共通タブバーの上にフローティング表示） */}
       <SafeAreaView style={styles.floatingButtonContainer} pointerEvents="box-none" edges={['bottom', 'right']}>
         <TouchableOpacity style={styles.fabButton} onPress={handleOpenDropModal}>
-            <MaterialCommunityIcons name="pencil-plus" size={36} color={colors.white} />
+            <MaterialCommunityIcons name="pencil-plus" size={28} color={colors.white} />
+            <Text style={styles.fabButtonText}>DROP</Text>
         </TouchableOpacity>
       </SafeAreaView>
 
@@ -351,24 +352,31 @@ const styles = StyleSheet.create({
   },
   floatingButtonContainer: {
     position: 'absolute',
-    bottom: 90, // タブバーの上
+    bottom: 100, // タブバーのさらに上へ（より押しやすく）
     right: 20, // 右下に配置
     zIndex: 10,
   },
   fabButton: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
+    width: 80,
+    height: 80,
+    borderRadius: 40, // 完全に丸いボタン
     backgroundColor: colors.magenta,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 2, height: 4 },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
-    elevation: 8,
-    borderWidth: 3,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.6,
+    shadowRadius: 8,
+    elevation: 10,
+    borderWidth: 4,
     borderColor: '#fff',
+  },
+  fabButtonText: {
+    color: colors.white,
+    fontWeight: 'bold',
+    fontSize: 12,
+    marginTop: 2,
+    fontFamily: 'monospace',
   },
   avatarMarkerContainer: {
     alignItems: 'center',
@@ -489,7 +497,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    paddingBottom: 40,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
   },
   retroModalContent: {
     width: width * 0.95,
