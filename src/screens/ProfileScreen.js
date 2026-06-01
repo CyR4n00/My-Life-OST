@@ -63,31 +63,16 @@ export default function ProfileScreen() {
           </View>
         </BlurView>
 
-        {/* ガチャ（着せ替え）エリア */}
-        <Text style={[globalStyles.textPixel, styles.sectionTitle]}>GACHA / ITEMS</Text>
-        <BlurView intensity={80} tint="light" style={[styles.gachaCard, globalStyles.glassmorphism]}>
-          <View style={styles.gachaInfo}>
-            <MaterialCommunityIcons name="treasure-chest" size={32} color={colors.accent} />
-            <View style={{ marginLeft: 15 }}>
-              <Text style={styles.gachaTitle}>アバター着せ替えガチャ</Text>
-              <Text style={styles.gachaSub}>限定Y3Kアイテムピックアップ中！</Text>
-            </View>
-          </View>
-          <TouchableOpacity style={styles.gachaBtn}>
-            <Text style={styles.gachaBtnText}>回す (300 Coin)</Text>
-          </TouchableOpacity>
-        </BlurView>
-
         {/* プレミアム機能 */}
         <Text style={[globalStyles.textPixel, styles.sectionTitle]}>PREMIUM</Text>
         <BlurView intensity={80} tint="light" style={[styles.premiumCard, globalStyles.glassmorphism]}>
           <View style={styles.premiumItem}>
             <MaterialCommunityIcons name="star-shooting" size={24} color={colors.magenta} />
-            <Text style={styles.premiumText}>ドロップ上限解放（無制限）</Text>
+            <Text style={styles.premiumText}>Unlimited Drops</Text>
           </View>
           <View style={styles.premiumItem}>
             <MaterialCommunityIcons name="eye-off" size={24} color={colors.cyan} />
-            <Text style={styles.premiumText}>広告非表示</Text>
+            <Text style={styles.premiumText}>Ad-Free Experience</Text>
           </View>
           <TouchableOpacity style={styles.premiumBtn}>
             <Text style={styles.premiumBtnText}>UPGRADE</Text>
@@ -248,37 +233,6 @@ const styles = StyleSheet.create({
     color: colors.gray,
     marginBottom: 10,
     marginLeft: 5,
-  },
-  gachaCard: {
-    borderRadius: 16,
-    padding: 15,
-    marginBottom: 25,
-  },
-  gachaInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  gachaTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: colors.text,
-    marginBottom: 4,
-  },
-  gachaSub: {
-    fontSize: 12,
-    color: colors.accent,
-  },
-  gachaBtn: {
-    backgroundColor: colors.accent,
-    paddingVertical: 12,
-    borderRadius: 20,
-    alignItems: 'center',
-  },
-  gachaBtnText: {
-    color: colors.white,
-    fontWeight: 'bold',
-    fontSize: 16,
   },
   premiumCard: {
     borderRadius: 16,

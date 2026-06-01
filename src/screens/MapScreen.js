@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, globalStyles } from '../constants/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
+import * as ImagePicker from 'expo-image-picker';
 import EncounterModal from '../components/EncounterModal';
 import RetroAvatar from '../components/RetroAvatar';
 
@@ -43,6 +44,7 @@ export default function MapScreen() {
     longitudeDelta: 0.005,
   });
 
+  const [activeDrops, setActiveDrops] = useState(MOCK_DROPS);
   const [isDropModalVisible, setDropModalVisible] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState(AVAILABLE_ICONS[0]);
   const [dropMessage, setDropMessage] = useState('');
@@ -59,13 +61,55 @@ export default function MapScreen() {
     if (dropsLeft > 0) {
       setDropModalVisible(true);
     } else {
-      Alert.alert("通知", "今日のドロップ回数を使い切りました。明日まで待つか、プレミアム機能で回復してください！");
+      Alert.alert("Out of Drops", "You have used all your drops for today. Wait until tomorrow or upgrade to premium!");
+    }
+  };
+
+  const handleAttachPhoto = async () => {
+    if (attachedPhoto) {
+      setAttachedPhoto(null); // すでに写真がある場合は削除するトグル動作
+      return;
+    }
+
+    // カメラロールの許可をリクエスト
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission Denied', 'We need camera roll permissions to make this work!');
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.8,
+    });
+
+    if (!result.canceled) {
+      setAttachedPhoto(result.assets[0].uri);
     }
   };
 
   const handleDrop = () => {
-    // 実際はここでAPI等に送信し、新しいドロップを地図上に追加する処理を書く
-    console.log("Dropped:", { icon: selectedIcon, message: dropMessage, photo: attachedPhoto });
+    if (!dropMessage.trim() && !attachedPhoto) {
+      Alert.alert('Empty Drop', 'Please write a message or attach a photo before dropping.');
+      return;
+    }
+
+    // 自分の現在位置付近に新しいドロップを追加する
+    const newDrop = {
+      id: Date.now(), // 簡易的な一意のID
+      lat: SHIBUYA_LAT + (Math.random() * 0.0004 - 0.0002), // 現在地から少しずらした位置
+      lng: SHIBUYA_LNG + (Math.random() * 0.0004 - 0.0002),
+      icon: selectedIcon,
+      title: 'My Secret Drop',
+      message: dropMessage,
+      user: 'NeoUser_99',
+      hasPhoto: !!attachedPhoto,
+      color: colors.primary,
+    };
+
+    setActiveDrops(prev => [...prev, newDrop]);
     setDropsLeft(prev => Math.max(0, prev - 1));
     setDropModalVisible(false);
     setDropMessage('');
@@ -84,10 +128,10 @@ export default function MapScreen() {
         <View style={styles.webMapPlaceholder}>
           <MaterialCommunityIcons name="map-marker-off" size={64} color={colors.primary} />
           <Text style={[globalStyles.textNormal, styles.webMapText]}>
-            マップ表示はiOS/Android端末でのみサポートされています。
+            Map view is only supported on native devices.
           </Text>
           <Text style={[globalStyles.textNormal, { color: '#888', marginTop: 10 }]}>
-            (Webプレビュー用モック: 本来はライトパープル系のマップが表示されます)
+            (Web Preview Mock)
           </Text>
 
           {/* テスト用のモックドロップ（Web検証用） */}
@@ -95,8 +139,8 @@ export default function MapScreen() {
             style={{ position: 'absolute', top: 150, left: 100 }}
             onPress={() => handlePickDrop({
               id: 1,
-              title: '秘密の書き置き',
-              message: '〇〇大学の食堂の端の席に、「次の講義ダルいね」という書き置き。',
+              title: 'Secret Note',
+              message: 'Left a note at the end of the cafeteria. Next class is so boring.',
               user: 'Stranger_1',
               hasPhoto: true,
               color: colors.cyan
@@ -139,10 +183,13 @@ export default function MapScreen() {
             </Marker>
 
           {/* ドロップのピン（レーダー風表示） */}
-          {MOCK_DROPS.map((drop) => {
+          {activeDrops.map((drop) => {
             // 仮の距離計算（実際はHaversine式などで計算）
-            // id=1 は近く(12m)、id=2は遠く(85m)というモック
-            const distance = drop.id === 1 ? 12 : drop.id === 2 ? 85 : 200;
+            // idが現在時刻のもの（自分が落としたもの）や特定のIDは近くにするなどモック計算
+            let distance = 200;
+            if (drop.id === 1 || drop.id > 1000) distance = 12; // 1または自分が落としたもの
+            else if (drop.id === 2) distance = 85;
+
             const isClose = distance <= 50;
 
             return (
@@ -153,13 +200,13 @@ export default function MapScreen() {
                   if (isClose) {
                     handlePickDrop({
                       ...drop,
-                      message: '偶然通りかかったね！よろしく！',
-                      user: 'Stranger_' + drop.id,
+                      message: drop.message || 'Just passed by! Nice to meet you!',
+                      user: drop.user || ('Stranger_' + drop.id),
                       userIcon: 'alien-outline',
-                      hasPhoto: drop.id === 1 // モックで写真あり判定
+                      hasPhoto: drop.hasPhoto || (drop.id === 1) // モックで写真あり判定
                     });
                   } else {
-                    Alert.alert('遠すぎます', '近づかないと開けません！');
+                    Alert.alert('Too far', 'You must get closer to open this drop!');
                   }
                 }}
               >
@@ -229,7 +276,7 @@ export default function MapScreen() {
             {/* ガラケー/レトロ風のヘッダー */}
             <View style={styles.retroModalHeader}>
               <MaterialCommunityIcons name="pencil-box" size={16} color={colors.white} />
-              <Text style={[globalStyles.textPixel, styles.retroModalTitle]}>新規作成 (DROP)</Text>
+              <Text style={[globalStyles.textPixel, styles.retroModalTitle]}>NEW DROP</Text>
             </View>
 
             <View style={styles.retroModalBody}>
@@ -256,7 +303,7 @@ export default function MapScreen() {
               <Text style={styles.retroModalSectionTitle}>ATTACHMENT</Text>
               <TouchableOpacity
                 style={[styles.retroPhotoAttachButton, attachedPhoto && styles.retroPhotoAttachButtonActive]}
-                onPress={() => setAttachedPhoto(!attachedPhoto)}
+                onPress={handleAttachPhoto}
               >
                 <MaterialCommunityIcons
                   name={attachedPhoto ? "image-check" : "camera-plus"}
@@ -264,14 +311,14 @@ export default function MapScreen() {
                   color={attachedPhoto ? '#fff' : '#333'}
                 />
                 <Text style={[styles.retroPhotoAttachText, attachedPhoto && {color: '#fff'}]}>
-                  {attachedPhoto ? "添付ファイル.jpg" : "写真を選択する"}
+                  {attachedPhoto ? "Photo Attached (Tap to remove)" : "Attach a Photo"}
                 </Text>
               </TouchableOpacity>
 
               <Text style={styles.retroModalSectionTitle}>MESSAGE</Text>
               <TextInput
                 style={styles.retroTextInput}
-                placeholder="ここにテキストを入力..."
+                placeholder="What's happening here?"
                 placeholderTextColor="#999"
                 value={dropMessage}
                 onChangeText={setDropMessage}
@@ -282,10 +329,10 @@ export default function MapScreen() {
             {/* ガラケー風アクションボタン */}
             <View style={styles.retroModalActionButtons}>
               <TouchableOpacity style={styles.retroCancelButton} onPress={() => setDropModalVisible(false)}>
-                <Text style={styles.retroCancelButtonText}>戻る</Text>
+                <Text style={styles.retroCancelButtonText}>CANCEL</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.retroSubmitButton} onPress={handleDrop}>
-                <Text style={styles.retroSubmitButtonText}>埋める</Text>
+                <Text style={styles.retroSubmitButtonText}>DROP IT</Text>
               </TouchableOpacity>
             </View>
           </View>

@@ -53,7 +53,7 @@ export default function FriendScreen() {
           <View style={{ flex: 1 }}>
             <Text style={styles.bannerTitle}>SECRET DROP</Text>
             <Text style={styles.bannerText}>
-              フレンドだけにしか見えない・拾えない秘密のドロップを埋めることができます。
+              You can drop a secret message that only your friends can see and pick up.
             </Text>
           </View>
         </BlurView>

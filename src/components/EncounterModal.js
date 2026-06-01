@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Share } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -78,6 +78,16 @@ export default function EncounterModal({ visible, dropData, onClose }) {
     opacity: flashOpacity.value,
   }));
 
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: `I found a Secret Drop from ${dropData?.user || 'UNKNOWN'}! \n\n"${dropData?.message || ''}"\n\n#DropZone #Y3K`,
+      });
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   const handleClose = () => {
     // 閉じる時はリセットする
     leftAvatarX.value = -width / 2 - 100;
@@ -103,7 +113,7 @@ export default function EncounterModal({ visible, dropData, onClose }) {
             {/* ガラケー風のヘッダーバー */}
             <View style={styles.retroHeader}>
               <MaterialCommunityIcons name="email-arrow-right" size={16} color={colors.white} />
-              <Text style={[globalStyles.textPixel, styles.retroHeaderText]}>受信メール</Text>
+              <Text style={[globalStyles.textPixel, styles.retroHeaderText]}>INBOX</Text>
               <Text style={[globalStyles.textPixel, styles.retroHeaderTime]}>12:34</Text>
             </View>
 
@@ -123,16 +133,16 @@ export default function EncounterModal({ visible, dropData, onClose }) {
             {dropData.hasPhoto && (
               <View style={styles.retroPhotoContainer}>
                 <MaterialCommunityIcons name="image" size={40} color={colors.gray} />
-                <Text style={styles.retroPhotoText}>添付ファイル.jpg</Text>
+                <Text style={styles.retroPhotoText}>attached_image.jpg</Text>
               </View>
             )}
 
             <View style={styles.retroBody}>
-              <Text style={styles.retroMessageText}>{dropData.message || 'メッセージはありません。'}</Text>
+              <Text style={styles.retroMessageText}>{dropData.message || 'No message.'}</Text>
             </View>
 
             <View style={styles.actionButtons}>
-              <TouchableOpacity style={styles.shareButton} onPress={() => Alert.alert('シェア', 'TikTok/Instagramにシェアしました！')}>
+              <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
                 <MaterialCommunityIcons name="share-variant" size={20} color={colors.white} />
                 <Text style={styles.shareButtonText}>SHARE</Text>
               </TouchableOpacity>
@@ -162,7 +172,7 @@ export default function EncounterModal({ visible, dropData, onClose }) {
         {/* 出会った瞬間のテキスト演出 */}
         {phase === 'meeting' && (
            <View style={styles.meetingTextContainer}>
-             <Text style={[globalStyles.textPixel, styles.meetingText]}>エンカウント!</Text>
+             <Text style={[globalStyles.textPixel, styles.meetingText]}>ENCOUNTER!</Text>
            </View>
         )}
 

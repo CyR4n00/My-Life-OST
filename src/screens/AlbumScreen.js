@@ -7,10 +7,10 @@ import { BlurView } from 'expo-blur';
 
 // 仮の拾ったドロップ履歴データ
 const MOCK_COLLECTION = [
-  { id: '1', date: '2023-10-24 14:30', location: 'Shibuya', title: '秘密の書き置き', message: '〇〇大学の食堂の端の席に、「次の講義ダルいね」という書き置き。', user: 'UserA_001', hasPhoto: true },
-  { id: '2', date: '2023-10-24 09:15', location: 'Shinjuku', title: '駅のホームで', message: 'ここの自販機、たまに当たりが出るよ！', user: 'NeonCat', hasPhoto: false },
-  { id: '3', date: '2023-10-23 20:00', location: 'Harajuku', title: '路上ライブ', message: '今日のバンド、エモすぎた。', user: 'CyberBoy', hasPhoto: true },
-  { id: '4', date: '2023-10-22 18:45', location: 'Ikebukuro', title: 'ゲーセン報告', message: 'クレーンゲームで神引きしたから記念に埋めとく。', user: 'Player1', hasPhoto: true },
+  { id: '1', date: '2023-10-24 14:30', location: 'Shibuya', title: 'Secret Note', message: 'Left a note at the end of the cafeteria. Next class is so boring.', user: 'UserA_001', hasPhoto: true },
+  { id: '2', date: '2023-10-24 09:15', location: 'Shinjuku', title: 'Train Station', message: 'This vending machine gives extra drinks sometimes!', user: 'NeonCat', hasPhoto: false },
+  { id: '3', date: '2023-10-23 20:00', location: 'Harajuku', title: 'Street Live', message: 'The band today was super emotional.', user: 'CyberBoy', hasPhoto: true },
+  { id: '4', date: '2023-10-22 18:45', location: 'Ikebukuro', title: 'Arcade Flex', message: 'God pull on the crane game! Dropping this as a memorial.', user: 'Player1', hasPhoto: true },
 ];
 
 export default function AlbumScreen() {
@@ -39,7 +39,7 @@ export default function AlbumScreen() {
         {item.hasPhoto && (
           <View style={styles.photoIndicator}>
              <MaterialCommunityIcons name="paperclip" size={14} color="#666" />
-             <Text style={styles.photoIndicatorText}>画像添付あり</Text>
+             <Text style={styles.photoIndicatorText}>Has Attachment</Text>
           </View>
         )}
       </View>
