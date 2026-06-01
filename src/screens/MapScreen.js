@@ -61,7 +61,7 @@ export default function MapScreen() {
     if (dropsLeft > 0) {
       setDropModalVisible(true);
     } else {
-      Alert.alert("Out of Drops", "You have used all your drops for today. Wait until tomorrow or upgrade to premium!");
+      Alert.alert("通知", "今日のドロップ回数を使い切りました。明日まで待つか、プレミアム機能で回復してください！");
     }
   };
 
@@ -74,7 +74,7 @@ export default function MapScreen() {
     // カメラロールの許可をリクエスト
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert('Permission Denied', 'We need camera roll permissions to make this work!');
+      Alert.alert('権限エラー', '写真の添付にはカメラロールのアクセス許可が必要です。');
       return;
     }
 
@@ -92,7 +92,7 @@ export default function MapScreen() {
 
   const handleDrop = () => {
     if (!dropMessage.trim() && !attachedPhoto) {
-      Alert.alert('Empty Drop', 'Please write a message or attach a photo before dropping.');
+      Alert.alert('エラー', 'メッセージを入力するか、写真を添付してください。');
       return;
     }
 
@@ -128,10 +128,10 @@ export default function MapScreen() {
         <View style={styles.webMapPlaceholder}>
           <MaterialCommunityIcons name="map-marker-off" size={64} color={colors.primary} />
           <Text style={[globalStyles.textNormal, styles.webMapText]}>
-            Map view is only supported on native devices.
+            マップ表示はiOS/Android端末でのみサポートされています。
           </Text>
           <Text style={[globalStyles.textNormal, { color: '#888', marginTop: 10 }]}>
-            (Web Preview Mock)
+            (Webプレビュー用モック)
           </Text>
 
           {/* テスト用のモックドロップ（Web検証用） */}
@@ -139,8 +139,8 @@ export default function MapScreen() {
             style={{ position: 'absolute', top: 150, left: 100 }}
             onPress={() => handlePickDrop({
               id: 1,
-              title: 'Secret Note',
-              message: 'Left a note at the end of the cafeteria. Next class is so boring.',
+              title: '秘密の書き置き',
+              message: '〇〇大学の食堂の端の席に、「次の講義ダルいね」という書き置き。',
               user: 'Stranger_1',
               hasPhoto: true,
               color: colors.cyan
@@ -200,13 +200,13 @@ export default function MapScreen() {
                   if (isClose) {
                     handlePickDrop({
                       ...drop,
-                      message: drop.message || 'Just passed by! Nice to meet you!',
+                      message: drop.message || '偶然通りかかったね！よろしく！',
                       user: drop.user || ('Stranger_' + drop.id),
                       userIcon: 'alien-outline',
                       hasPhoto: drop.hasPhoto || (drop.id === 1) // モックで写真あり判定
                     });
                   } else {
-                    Alert.alert('Too far', 'You must get closer to open this drop!');
+                    Alert.alert('遠すぎます', '近づかないと開けません！');
                   }
                 }}
               >
@@ -311,14 +311,14 @@ export default function MapScreen() {
                   color={attachedPhoto ? '#fff' : '#333'}
                 />
                 <Text style={[styles.retroPhotoAttachText, attachedPhoto && {color: '#fff'}]}>
-                  {attachedPhoto ? "Photo Attached (Tap to remove)" : "Attach a Photo"}
+                  {attachedPhoto ? "画像添付済み (タップで削除)" : "写真を選択する"}
                 </Text>
               </TouchableOpacity>
 
               <Text style={styles.retroModalSectionTitle}>MESSAGE</Text>
               <TextInput
                 style={styles.retroTextInput}
-                placeholder="What's happening here?"
+                placeholder="ここにテキストを入力..."
                 placeholderTextColor="#999"
                 value={dropMessage}
                 onChangeText={setDropMessage}
@@ -329,10 +329,10 @@ export default function MapScreen() {
             {/* ガラケー風アクションボタン */}
             <View style={styles.retroModalActionButtons}>
               <TouchableOpacity style={styles.retroCancelButton} onPress={() => setDropModalVisible(false)}>
-                <Text style={styles.retroCancelButtonText}>CANCEL</Text>
+                <Text style={styles.retroCancelButtonText}>戻る</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.retroSubmitButton} onPress={handleDrop}>
-                <Text style={styles.retroSubmitButtonText}>DROP IT</Text>
+                <Text style={styles.retroSubmitButtonText}>落とす</Text>
               </TouchableOpacity>
             </View>
           </View>

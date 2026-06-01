@@ -113,7 +113,7 @@ export default function EncounterModal({ visible, dropData, onClose }) {
             {/* ガラケー風のヘッダーバー */}
             <View style={styles.retroHeader}>
               <MaterialCommunityIcons name="email-arrow-right" size={16} color={colors.white} />
-              <Text style={[globalStyles.textPixel, styles.retroHeaderText]}>INBOX</Text>
+              <Text style={[globalStyles.textPixel, styles.retroHeaderText]}>受信メール</Text>
               <Text style={[globalStyles.textPixel, styles.retroHeaderTime]}>12:34</Text>
             </View>
 
@@ -133,22 +133,22 @@ export default function EncounterModal({ visible, dropData, onClose }) {
             {dropData.hasPhoto && (
               <View style={styles.retroPhotoContainer}>
                 <MaterialCommunityIcons name="image" size={40} color={colors.gray} />
-                <Text style={styles.retroPhotoText}>attached_image.jpg</Text>
+                <Text style={styles.retroPhotoText}>添付ファイル.jpg</Text>
               </View>
             )}
 
             <View style={styles.retroBody}>
-              <Text style={styles.retroMessageText}>{dropData.message || 'No message.'}</Text>
+              <Text style={styles.retroMessageText}>{dropData.message || 'メッセージはありません。'}</Text>
             </View>
 
             <View style={styles.actionButtons}>
               <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
                 <MaterialCommunityIcons name="share-variant" size={20} color={colors.white} />
-                <Text style={styles.shareButtonText}>SHARE</Text>
+                <Text style={styles.shareButtonText}>シェア</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
-                <Text style={styles.closeButtonText}>CLOSE</Text>
+                <Text style={styles.closeButtonText}>閉じる</Text>
               </TouchableOpacity>
             </View>
           </Animated.View>

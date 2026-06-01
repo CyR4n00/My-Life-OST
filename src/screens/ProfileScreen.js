@@ -68,11 +68,11 @@ export default function ProfileScreen() {
         <BlurView intensity={80} tint="light" style={[styles.premiumCard, globalStyles.glassmorphism]}>
           <View style={styles.premiumItem}>
             <MaterialCommunityIcons name="star-shooting" size={24} color={colors.magenta} />
-            <Text style={styles.premiumText}>Unlimited Drops</Text>
+            <Text style={styles.premiumText}>ドロップ上限解放（無制限）</Text>
           </View>
           <View style={styles.premiumItem}>
             <MaterialCommunityIcons name="eye-off" size={24} color={colors.cyan} />
-            <Text style={styles.premiumText}>Ad-Free Experience</Text>
+            <Text style={styles.premiumText}>広告非表示</Text>
           </View>
           <TouchableOpacity style={styles.premiumBtn}>
             <Text style={styles.premiumBtnText}>UPGRADE</Text>
