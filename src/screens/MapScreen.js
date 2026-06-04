@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Modal, Dimensions, TextInput, ScrollView, Platform, KeyboardAvoidingView, Alert } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Modal, Dimensions, TextInput, ScrollView, Platform, KeyboardAvoidingView, Alert, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, globalStyles } from '../constants/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -56,6 +56,23 @@ export default function MapScreen() {
   // ドロップ回数の管理（初期値3）
   const [dropsLeft, setDropsLeft] = useState(3);
   const MAX_DROPS = 3;
+
+  // モック通知用アニメーション
+  const [toastVisible, setToastVisible] = useState(false);
+  const toastAnim = React.useRef(new Animated.Value(-100)).current;
+
+  // 初回マウント時にモック通知を出す演出
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setToastVisible(true);
+      Animated.sequence([
+        Animated.spring(toastAnim, { toValue: Platform.OS === 'ios' ? 50 : 20, useNativeDriver: true }),
+        Animated.delay(3000),
+        Animated.timing(toastAnim, { toValue: -100, duration: 300, useNativeDriver: true })
+      ]).start(() => setToastVisible(false));
+    }, 5000); // 5秒後に通知
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleOpenDropModal = () => {
     if (dropsLeft > 0) {
@@ -345,6 +362,17 @@ export default function MapScreen() {
         dropData={encounterData}
         onClose={() => setEncounterData(null)}
       />
+
+      {/* モック通知（Toast） */}
+      {toastVisible && (
+        <Animated.View style={[styles.toastContainer, { transform: [{ translateY: toastAnim }] }]}>
+          <BlurView intensity={80} tint="dark" style={styles.toastContent}>
+            <MaterialCommunityIcons name="bell-ring" size={20} color={colors.cyan} />
+            <Text style={[globalStyles.textPixel, styles.toastText]}>誰かがあなたのドロップを拾いました！</Text>
+          </BlurView>
+        </Animated.View>
+      )}
+
     </View>
   );
 }
@@ -507,6 +535,28 @@ const styles = StyleSheet.create({
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
     borderTopColor: colors.accent,
+  },
+  toastContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 20,
+    right: 20,
+    zIndex: 100,
+    alignItems: 'center',
+  },
+  toastContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.cyan,
+  },
+  toastText: {
+    color: colors.white,
+    marginLeft: 10,
+    fontSize: 12,
   },
   radarDotContainer: {
     alignItems: 'center',
