@@ -5,6 +5,7 @@ import { colors, globalStyles } from '../constants/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import RetroAvatar from '../components/RetroAvatar';
+import RetroAdBanner from '../components/RetroAdBanner';
 
 // 仮のフレンドデータ
 const MOCK_FRIENDS = [
@@ -65,6 +66,7 @@ export default function FriendScreen() {
         renderItem={renderItem}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
+        ListFooterComponent={<RetroAdBanner />}
       />
     </SafeAreaView>
   );

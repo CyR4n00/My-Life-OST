@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, globalStyles } from '../constants/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
+import RetroAdBanner from '../components/RetroAdBanner';
 
 // 仮の拾ったドロップ履歴データ
 const MOCK_COLLECTION = [
@@ -59,6 +60,7 @@ export default function AlbumScreen() {
         renderItem={renderItem}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
+        ListFooterComponent={<RetroAdBanner />}
       />
     </SafeAreaView>
   );
